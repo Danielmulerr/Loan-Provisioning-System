@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: Loan provisioning system
+  profiles:
+    active: dev
+server:
+  port: 8595
