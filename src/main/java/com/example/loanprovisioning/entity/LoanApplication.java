@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
 
@@ -39,5 +40,7 @@ public class LoanApplication {
     private Timestamp approvalDate;
     @Column(name = "DISBURSEMENT_DATE")
     private Timestamp disbursementDate;
-
+    @UpdateTimestamp
+    @Column(name = "LAST_UPDATE_DATE")
+    private Timestamp lastUpdateDate;
 }

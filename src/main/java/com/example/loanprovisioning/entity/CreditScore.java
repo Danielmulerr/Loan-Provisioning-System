@@ -4,6 +4,7 @@ package com.example.loanprovisioning.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
 
@@ -41,5 +42,7 @@ public class CreditScore {
     private Timestamp scoreDate;
     @Column(name = "CREDIT_BUREAU_SOURCE")
     private String creditBureauSource;
-
+    @UpdateTimestamp
+    @Column(name = "LAST_UPDATE_DATE")
+    private Timestamp lastUpdateDate;
 }

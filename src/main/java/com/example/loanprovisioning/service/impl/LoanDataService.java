@@ -44,11 +44,11 @@ public class LoanDataService {
     }
 
     private static double getMockDtiRation() {
-        return 0.35;
+        return 0.95;
     }
 
     private static int getMockCreditScore() {
-        return 700;
+        return 500;
     }
 
     private static AlternativeCreditData getMockAlternativeCredit() {

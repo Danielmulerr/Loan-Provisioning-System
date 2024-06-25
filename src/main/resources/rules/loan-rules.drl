@@ -1,4 +1,4 @@
-package com.example.loanprovisioning.rules;
+package com.example.rules;
 
 import com.example.loanprovisioning.entity.LoanApplication;
 import com.example.loanprovisioning.entity.CreditScore;
@@ -39,10 +39,10 @@ rule "Decline due to Alternative Credit Data"
     when
         $application : LoanApplication(status == LoanStatus.PENDING)
         $creditScore : CreditScore(user == $application.user)
-        (
-            $creditScore.changeOfAddress >= 3 && $creditScore.changeOfAddressPeriod <= 3 ||
-            $creditScore.lateRentalPayments >= 4 && $creditScore.lateRentalPaymentsPeriod <= 24 ||
-            $creditScore.lateCellPhonePayments >= 1 && $creditScore.lateCellPhonePaymentsPeriod <= 12
+        eval(
+            ($creditScore.getChangeOfAddress() >= 3 && $creditScore.getChangeOfAddressPeriod() <= 3) ||
+            ($creditScore.getLateRentalPayments() >= 4 && $creditScore.getLateRentalPaymentsPeriod() <= 24) ||
+            ($creditScore.getLateCellPhonePayments() >= 1 && $creditScore.getLateCellPhonePaymentsPeriod() <= 12)
         )
     then
         $application.setStatus(LoanStatus.REJECTED);
