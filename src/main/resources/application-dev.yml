@@ -9,29 +9,33 @@ spring:
     mvc:
       pathmatch:
         matching-strategy: ant_path_matcher
-  h2:
-    console.enabled: true
-    console:
-      path: /h2-console
-      settings.trace: false
-      settings.web-allow-others: false
+  #    h2:
+  #      console.enabled: true
+  #      console:
+  #        path: /h2-console
+  #        settings.trace: false
+  #        settings.web-allow-others: false
+  #        ed
   datasource:
-    url: jdbc:h2:file:/data/demoDB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE;MODE=PostgreSQL;
-    driverClassName: org.h2.Driver
-    username: sa
-    password: password
-    jpa:
-      database-platform: org.hibernate.dialect.H2Dialect
-      show-sql: true
-      generate-ddl: true
-      properties:
-        hibernate:
-          jdbc.batch_size: 100
-          order_inserts: true
-          order_updates: true
-          jdbc:
-            batch_versioned_data: true
-
+    url: jdbc:postgresql://localhost:54329/loan_provisioning_system
+    username: postgres
+    password: admin
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    properties:
+      hibernate:
+        #          generate_statistics: true
+        #          session:
+        #            event:
+        #              log:
+        #                LOG_QUERIES_SLOWER_THAN_MS: 3
+        jdbc.batch_size: 50
+        order_inserts: true
+        order_updates: true
+        ddl-auto: update
+        jdbc:
+          batch_versioned_data: true
 management:
   endpoint:
     health:
@@ -51,3 +55,71 @@ mock:
   service:
     url: "dev.service"
 
+mailer-config:
+  baseUrl: ""
+  apiToken: ""
+  protocol: smtp
+  host: ""
+  port: 587
+  username: ""
+  password: ""
+  smtpAuth: true
+  smtpStarttlsEnable: true
+  sslEnable: false
+
+email-config:
+  from: ""
+  verifyEmailSubject: "Confirm your identity for your account"
+  verifyEmailContent: "Dear {0}, Thank you for creating an account on {1} portal. Please use the OTP code below and sign into your account to verify your email address and complete your registration. Your one time verification code(OTP) is {2}"
+  accountVerifiedSubject: "Your account has been verified"
+  accountVerifiedContent: "Congratulations!! You have successfully completed your registration."
+  passwordForgotSubject: "Forgot password confirmation"
+  passwordForgotContent: "Dear {0}, Forgot password process has been initiated,  Please use the OTP code below to change your password. Your one time verification code(OTP) is {1}"
+  resetSuccessSubject: "Password reset successful"
+  resetSuccessContent: "Dear {0}, Your password has been changed."
+  emailChangeSubject: "Email change request verification"
+  emailChangeInitiate: "Dear {0}, Your change email request OTP is {1}, please use this to finalise your process."
+  phoneChangeSubject: "Phone change request verification"
+  phoneChangeInitiate: "Dear {0}, Your change phone request OTP is {1}, please use this to finalise your process."
+  appName: "Loan provisioning system"
+
+apikey: dc79b0dfd0f5807e78cf8a445cd22a70
+secretkey: 01c89b290ac5fa9a8284d196b90df337
+
+loan:
+  validationRules:
+    rule-1:
+      minCreditScore: 700
+      maxDTIRatio: 0.4
+      additionalValidationsRequired: true
+      approvalStrategy: AUTOMATIC
+    rule-2:
+      minCreditScore: 600
+      maxDTIRatio: 0.5
+      additionalValidationsRequired: true
+      approvalStrategy: MANUAL
+    rule-3:
+      minCreditScore: 0
+      maxDTIRatio: 1.0
+      additionalValidationsRequired: false
+      approvalStrategy: REJECTED
+  alternativeCreditDataRules:
+    changeOfAddressThreshold: 3
+    changeOfAddressPeriod: 3
+    lateRentalPaymentsThreshold: 4
+    lateRentalPaymentsPeriod: 24
+    lateCellPhonePaymentsThreshold: 1
+    lateCellPhonePaymentsPeriod: 12
+  autoStructuringRules:
+    downPaymentIncrement: 500
+    monthlyPaymentReductionPercent: 5
+    dtiCap: 15
+    loanTermIncrementMonths: 3
+    maxLoanTermMonths: 84
+    monthlyPaymentReductionAmount: 50
+    interestRateIncreasePercent: 0.25
+  processingPipeline:
+    - initialCreditScoreAndDTICheck
+    - alternativeCreditDataAssessment
+    - autoStructuringProcess
+    - finalDecision

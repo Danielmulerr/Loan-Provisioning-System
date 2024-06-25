@@ -19,6 +19,10 @@ public class AppConstants {
     public static final String DEFAULT_PAGE_SIZE = "10";
     public static final String DEFAULT_PAGE_NUMBER = "0";
     public static final String LAST_UPDATE_DATE_DESC = "lastUpdateDate.desc";
-
+    public static final String EXCEPTION_ON_PREPARING_SMTP_PROPS = "Exception while preparing SMTP properties";
+    public static final String EXCEPTION_ON_FORMATTING_EMAIL = "Exception while formatting email message";
+    public static final String EXCEPTION_ON_SENDING_EMAIL = "Exception while sending email.";
+    public static final int START_YEAR = 2023;
+    public static final int END_YEAR = 4099;
 
 }

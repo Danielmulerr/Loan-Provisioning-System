@@ -7,15 +7,8 @@ import java.io.Serializable;
 
 @Builder
 public record MockRequestDto(
-        @JsonProperty("subject")
-        String subject,
-        @JsonProperty("amount")
-        Long amount,
-        @JsonProperty("returnUrl")
-        String returnUrl,
-        @JsonProperty("callbackUrl")
-        String callbackUrl,
-        @JsonProperty("expiresIn")
-        long expiresIn,
-        @JsonProperty("paymentIntentUniqueId") String uniqueId) implements Serializable {
+        @JsonProperty("userId")
+        Long userId,
+        @JsonProperty("email")
+        String email) implements Serializable {
 }

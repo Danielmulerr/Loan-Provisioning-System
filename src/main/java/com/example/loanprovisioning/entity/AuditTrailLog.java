@@ -30,16 +30,13 @@ public class AuditTrailLog {
 //    @JsonBackReference
     @Column(name = "USER_ID")
     private Long userId;
-
     @Column(name = "PAGE_PATH")
     private String pagePath;
     @Column(name = "ACTION_TYPE", nullable = false)
     @Enumerated(EnumType.STRING)
     private ActionType actionType;
-
     @Column(name = "RESOURCE")
     private String resource;
-
     @Column(name = "DESCRIPTION")
     private String description;
     @Column(name = "CREATION_DATE", nullable = false)

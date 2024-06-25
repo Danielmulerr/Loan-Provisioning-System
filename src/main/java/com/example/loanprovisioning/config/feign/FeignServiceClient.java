@@ -1,8 +1,8 @@
 package com.example.loanprovisioning.config.feign;
 
 import com.example.loanprovisioning.config.AppConstants;
+import com.example.loanprovisioning.config.properties.AlternativeCreditDataRules;
 import com.example.loanprovisioning.dto.MockRequestDto;
-import com.example.loanprovisioning.dto.MockResponseDto;
 import feign.Logger;
 import feign.Request;
 import feign.Retryer;
@@ -17,8 +17,14 @@ import java.util.concurrent.TimeUnit;
 
 @FeignClient(name = "mock-service-client", url = "${mock.service.url}", configuration = FeignClientConfig.class)
 public interface FeignServiceClient {
-    @PostMapping(value = "/invoke", consumes = "application/json")
-    ResponseEntity<MockResponseDto> pspServicePay(@RequestBody MockRequestDto pspPaymentRequestDto);
+    @PostMapping(value = "/fetch/creditScore", consumes = "application/json")
+    ResponseEntity<Integer> fetchCreditScore(@RequestBody MockRequestDto pspPaymentRequestDto);
+
+    @PostMapping(value = "/fetch/salary", consumes = "application/json")
+    ResponseEntity<Double> fetchSalaryInfo(@RequestBody MockRequestDto pspPaymentRequestDto);
+
+    @PostMapping(value = "/fetch/alternativeCreditData", consumes = "application/json")
+    ResponseEntity<AlternativeCreditDataRules> fetchAlternativeCreditData(@RequestBody MockRequestDto pspPaymentRequestDto);
 }
 
 class FeignClientConfig {

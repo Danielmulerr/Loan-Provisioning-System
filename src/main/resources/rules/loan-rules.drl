@@ -1,0 +1,102 @@
+package com.example.loanprovisioning.rules;
+
+import com.example.loanprovisioning.entity.LoanApplication;
+import com.example.loanprovisioning.entity.CreditScore;
+import com.example.loanprovisioning.dto.LoanStatus;
+
+// Rule for Automatic Approval
+rule "Automatic Approval"
+    when
+        $application : LoanApplication(status == LoanStatus.PENDING)
+        $creditScore : CreditScore(user == $application.user, creditScore >= 700, dtiRatio <= 0.4)
+    then
+        $application.setStatus(LoanStatus.APPROVED);
+        update($application);
+end
+
+// Rule for Manual Approval
+rule "Manual Approval"
+    when
+        $application : LoanApplication(status == LoanStatus.PENDING)
+        $creditScore : CreditScore(user == $application.user, creditScore >= 600, creditScore < 700, dtiRatio <= 0.5)
+    then
+        $application.setStatus(LoanStatus.MANUAL_REVIEW);
+        update($application);
+end
+
+// Rule for Rejecting Application
+rule "Reject Application"
+    when
+        $application : LoanApplication(status == LoanStatus.PENDING)
+        $creditScore : CreditScore(user == $application.user, creditScore < 600, dtiRatio > 0.5)
+    then
+        $application.setStatus(LoanStatus.REJECTED);
+        update($application);
+end
+
+// Rule for Decline due to Alternative Credit Data
+rule "Decline due to Alternative Credit Data"
+    when
+        $application : LoanApplication(status == LoanStatus.PENDING)
+        $creditScore : CreditScore(user == $application.user)
+        (
+            $creditScore.changeOfAddress >= 3 && $creditScore.changeOfAddressPeriod <= 3 ||
+            $creditScore.lateRentalPayments >= 4 && $creditScore.lateRentalPaymentsPeriod <= 24 ||
+            $creditScore.lateCellPhonePayments >= 1 && $creditScore.lateCellPhonePaymentsPeriod <= 12
+        )
+    then
+        $application.setStatus(LoanStatus.REJECTED);
+        update($application);
+end
+
+// Rule for Auto Structuring Increment Down Payment
+rule "Auto Structuring Increment Down Payment"
+    when
+        $application : LoanApplication(status == LoanStatus.MANUAL_REVIEW)
+        $creditScore : CreditScore(user == $application.user, creditScore >= 600, creditScore < 700)
+    then
+        // Increment down payment and loan term
+        $application.setLoanAmountRequested($application.getLoanAmountRequested() - 500);
+        $application.setTerm($application.getTerm() + 12);
+        $application.setStatus(LoanStatus.APPROVED);
+        update($application);
+end
+
+// Rule for Auto Structuring Decrease Monthly Payment
+rule "Auto Structuring Decrease Monthly Payment"
+    when
+        $application : LoanApplication(status == LoanStatus.MANUAL_REVIEW)
+        $creditScore : CreditScore(user == $application.user, creditScore >= 600, creditScore < 700)
+    then
+        // Decrease monthly payment and increase loan term
+        $application.setLoanAmountRequested($application.getLoanAmountRequested() + 1000);
+        $application.setTerm($application.getTerm() + 24);
+        $application.setStatus(LoanStatus.APPROVED);
+        update($application);
+end
+
+// Rule for Auto Structuring Reduce Interest Rate
+rule "Auto Structuring Reduce Interest Rate"
+    when
+        $application : LoanApplication(status == LoanStatus.MANUAL_REVIEW)
+        $creditScore : CreditScore(user == $application.user, creditScore >= 600, creditScore < 700)
+    then
+        // Reduce interest rate for better credit score
+        $application.setLoanAmountRequested($application.getLoanAmountRequested() - 2000);
+        $application.setTerm($application.getTerm() + 36);
+        $application.setStatus(LoanStatus.APPROVED);
+        update($application);
+end
+
+// Rule for Auto Structuring for High Credit Score and Low DTI
+rule "Auto Structuring for High Credit Score and Low DTI"
+    when
+        $application : LoanApplication(status == LoanStatus.MANUAL_REVIEW)
+        $creditScore : CreditScore(user == $application.user, creditScore >= 700, dtiRatio <= 0.3)
+    then
+        // Adjust loan terms or conditions for high credit score and low DTI
+        $application.setLoanAmountRequested($application.getLoanAmountRequested() - 1000);
+        $application.setTerm($application.getTerm() + 48);
+        $application.setStatus(LoanStatus.APPROVED);
+        update($application);
+end

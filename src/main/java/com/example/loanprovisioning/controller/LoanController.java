@@ -1,7 +1,9 @@
 package com.example.loanprovisioning.controller;
 
 import com.example.loanprovisioning.dto.GenericResponse;
-import com.example.loanprovisioning.service.FetchLoanService;
+import com.example.loanprovisioning.dto.LoanApplicationRequestDto;
+import com.example.loanprovisioning.service.LoanService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +17,17 @@ import static com.example.loanprovisioning.utils.PageableUtils.getPageable;
 
 @RestController
 @RequestMapping("api/v1/loans")
-public class FetchLoanController {
+public class LoanController {
 
-    private final FetchLoanService loanService;
+    private final LoanService loanService;
 
-    public FetchLoanController(FetchLoanService loanService) {
+    public LoanController(LoanService loanService) {
         this.loanService = loanService;
+    }
+
+    @PostMapping
+    ResponseEntity<GenericResponse> applyLoan(@RequestBody @Valid LoanApplicationRequestDto loanApplicationRequestDto) {
+        return loanService.createLoanApplication(loanApplicationRequestDto);
     }
 
     @GetMapping

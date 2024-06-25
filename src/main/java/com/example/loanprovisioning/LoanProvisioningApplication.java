@@ -1,6 +1,7 @@
 package com.example.loanprovisioning;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.cache.annotation.EnableCaching;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ConfigurationPropertiesScan
 @EnableFeignClients
 @SpringBootApplication
+@EnableAutoConfiguration
 public class LoanProvisioningApplication {
 
     public static void main(String[] args) {

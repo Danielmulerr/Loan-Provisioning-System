@@ -17,8 +17,6 @@ import java.util.UUID;
         @Index(name = "u_phone_index", columnList = "PHONE"),
         @Index(name = "u_first_name_index", columnList = "FIRST_NAME"),
         @Index(name = "u_uuid_index", columnList = "UUID"),
-        @Index(name = "u_deleted_index", columnList = "IS_DELETED"),
-        @Index(name = "u_verified_index", columnList = "ACCOUNT_VERIFIED"),
 })
 
 public class User {
@@ -35,33 +33,12 @@ public class User {
     private String lastName;
     @Column(name = "EMAIL", unique = true, nullable = false)
     private String email;
-    @Column(name = "PASSWORD", nullable = false)
-    private String password;
     @Column(name = "PHONE", length = 20, nullable = false)
     private String phone;
-    @Column(name = "PHOTO")
-    private String photo; //todo: user avatar
-    @Column(name = "LOGIN_ATTEMPTED_NUMBER", nullable = false, length = 3)
-    private Integer loginAttemptedNumber = 0;
-    @Column(name = "BLOCKED_UNTIL")
-    private Timestamp blockedUntil;
     @CreationTimestamp
     @Column(name = "CREATION_DATE")
     private Timestamp creationDate;
-
     @UpdateTimestamp
     @Column(name = "LAST_UPDATE_DATE")
     private Timestamp lastUpdateDate;
-
-    @Column(name = "ACCOUNT_VERIFIED", nullable = false)
-    private boolean verified = false;
-
-    @Column(name = "IS_DELETED", nullable = false, columnDefinition = "boolean default false")
-    private boolean deleted = false;
-
-    @Column(name = "LOGIN_OTP_REQUIRED", nullable = false)
-    private boolean loginOtpRequired = false;
-
-    @Column(name = "MANAGED_BY")
-    private Long managedBy;
 }
