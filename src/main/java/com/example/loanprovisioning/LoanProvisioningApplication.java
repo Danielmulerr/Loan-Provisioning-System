@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableCaching
-@EnableAsync
+@EnableAsync(proxyTargetClass = true)
 @EnableScheduling
 @EnableTransactionManagement
 @ConfigurationPropertiesScan

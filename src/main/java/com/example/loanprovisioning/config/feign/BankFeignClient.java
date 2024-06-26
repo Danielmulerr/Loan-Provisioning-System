@@ -1,8 +1,8 @@
 package com.example.loanprovisioning.config.feign;
 
 import com.example.loanprovisioning.config.AppConstants;
-import com.example.loanprovisioning.config.properties.AlternativeCreditDataRules;
-import com.example.loanprovisioning.dto.MockRequestDto;
+import com.example.loanprovisioning.dto.MockBankTransferRequestDto;
+import com.example.loanprovisioning.dto.PspPaymentResponseDto;
 import feign.Logger;
 import feign.Request;
 import feign.RequestInterceptor;
@@ -17,21 +17,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.concurrent.TimeUnit;
 
-@FeignClient(name = "mock-external-client", url = "${mock.service.url}", configuration = FeignClientConfig.class)
-public interface FeignServiceClient {
+@FeignClient(name = "mock-bank-client", url = "${mock.bank.url}", configuration = FeignClientConfig.class)
+public interface BankFeignClient {
     @PostMapping(value = "/transfer", consumes = "application/json")
-    ResponseEntity<Integer> transfer(@RequestBody MockRequestDto pspPaymentRequestDto);
-
-    @PostMapping(value = "/fetch/salary", consumes = "application/json")
-    ResponseEntity<Double> fetchSalaryInfo(@RequestBody MockRequestDto pspPaymentRequestDto);
-
-    @PostMapping(value = "/fetch/alternativeCreditData", consumes = "application/json")
-    ResponseEntity<AlternativeCreditDataRules> fetchAlternativeCreditData(@RequestBody MockRequestDto pspPaymentRequestDto);
+    ResponseEntity<PspPaymentResponseDto> transferMoney(@RequestBody MockBankTransferRequestDto mockBankTransferRequestDto);
 }
 
-class FeignClientConfig {
+class BankFeignConfig {
 
-    @Value("${mock.service.apiKey}")
+    @Value("${mock.bank.apiKey}")
     private String apiKey;
 
     @Bean
@@ -47,7 +41,7 @@ class FeignClientConfig {
     }
 
     @Bean
-    public RequestInterceptor serv() {
+    public RequestInterceptor bankApiInterceptor() {
         return template -> template.header("Authorization", "Bearer " + apiKey);
     }
 

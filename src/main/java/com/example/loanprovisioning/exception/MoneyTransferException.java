@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Setter
 @Getter
 @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-public class WithdrawalException extends CustomeException {
+public class MoneyTransferException extends CustomeException {
     private int status;
     private long dailyWithdrawal;
     private long dailyLimit;
     private long requestedAmount;
 
 
-    public WithdrawalException(String message, long dailyWithdrawal, long dailyLimit, long requestedAmount) {
+    public MoneyTransferException(String message, long dailyWithdrawal, long dailyLimit, long requestedAmount) {
         super(message);
         this.status = HttpStatus.UNPROCESSABLE_ENTITY.value();
         this.dailyWithdrawal = dailyWithdrawal;
@@ -24,12 +24,12 @@ public class WithdrawalException extends CustomeException {
     }
 
 
-    public WithdrawalException(HttpStatus status, String message) {
+    public MoneyTransferException(HttpStatus status, String message) {
         super(message);
         this.status = status.value();
     }
 
-    public WithdrawalException(String message) {
+    public MoneyTransferException(String message) {
         super(message);
         this.status = HttpStatus.UNPROCESSABLE_ENTITY.value();
     }

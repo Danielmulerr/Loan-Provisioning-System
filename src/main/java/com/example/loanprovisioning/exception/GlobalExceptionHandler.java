@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -129,10 +128,10 @@ public class GlobalExceptionHandler {
 //    }
 
 
-    @ExceptionHandler(WithdrawalException.class)
-    public ResponseEntity<BaseErrorResponse> apiKeyException(WithdrawalException withdrawalException) {
-        log.error(withdrawalException.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(new BaseErrorResponse(withdrawalException.getStatus(), withdrawalException.getMessage()));
+    @ExceptionHandler(MoneyTransferException.class)
+    public ResponseEntity<BaseErrorResponse> apiKeyException(MoneyTransferException moneyTransaferException) {
+        log.error(moneyTransaferException.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(new BaseErrorResponse(moneyTransaferException.getStatus(), moneyTransaferException.getMessage()));
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

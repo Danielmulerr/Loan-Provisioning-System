@@ -23,9 +23,7 @@ public class LogsServiceImpl implements LogService {
     }
 
     @Override
-    public ResponseEntity<GenericResponse> fetchLogs()
-
-    {
+    public ResponseEntity<GenericResponse> fetchLogs() {
         try {
             return prepareResponse(HttpStatus.OK, "Successfully repay logs", auditTrailLogRepository.findAll());
         } catch (CustomeException e) {

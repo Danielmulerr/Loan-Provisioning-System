@@ -1,5 +1,6 @@
-package com.example.loanprovisioning.entity;
+package com.example.loanprovisioning.repository;
 
+import com.example.loanprovisioning.entity.CreditScore;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

@@ -22,8 +22,10 @@ public class GeoIPServiceImpl implements GeoIPService {
 
     @Override
     public IPInfo getLocationFromIp(String ipAddress) {
-        if (ipAddress.equals(LOCALHOST))
+        if (ipAddress.equals(LOCALHOST)) {
             log.info(LOG_PREFIX, "Skipping location api call for localhost api", ipAddress);
+            return null;
+        }
         try {
             String url = IP_TO_LOCATION + "?key=" + API_KEY + "&ip=" + ipAddress;
             return restTemplate.getForObject(url, IPInfo.class);

@@ -2,7 +2,7 @@ package com.example.loanprovisioning.service.impl;
 
 import com.example.loanprovisioning.dto.*;
 import com.example.loanprovisioning.entity.CreditScore;
-import com.example.loanprovisioning.entity.CreditScoreRepository;
+import com.example.loanprovisioning.repository.CreditScoreRepository;
 import com.example.loanprovisioning.entity.LoanApplication;
 import com.example.loanprovisioning.entity.User;
 import com.example.loanprovisioning.exception.CustomeException;
@@ -14,6 +14,7 @@ import com.example.loanprovisioning.service.LoanService;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,16 +36,18 @@ public class LoanServiceImpl implements LoanService {
     private final ModelMapper modelMapper;
     private final LoanApplicationRepository loanApplicationRepository;
     private final UserRepository userRepository;
-    private final LoanDataService loanDataService;
+    private final MockLoanDataServiceImpl mockLoanDataServiceImpl;
+    @Value("${origination-fee-rate}")
+    private double originationFeeRate;
 
     public LoanServiceImpl(UserRepository userRepository,
                            LoanApplicationRepository loanApplicationRepository,
-                           ModelMapper modelMapper, LoanDataService loanDataService,
+                           ModelMapper modelMapper, MockLoanDataServiceImpl mockLoanDataServiceImpl,
                            CreditScoreRepository creditScoreRepository) {
         this.userRepository = userRepository;
         this.loanApplicationRepository = loanApplicationRepository;
         this.modelMapper = modelMapper;
-        this.loanDataService = loanDataService;
+        this.mockLoanDataServiceImpl = mockLoanDataServiceImpl;
         this.creditScoreRepository = creditScoreRepository;
     }
 
@@ -87,12 +90,7 @@ public class LoanServiceImpl implements LoanService {
             val currentUser = userRepository.findByEmailIgnoreCase(loanApplicationRequestDto.email())
                     .orElse(prepareNeUseInfo(loanApplicationRequestDto));
             var updatedUser = userRepository.save(currentUser);
-            var loanApplication = new LoanApplication();
-            loanApplication.setUser(updatedUser);
-            loanApplication.setPurpose(loanApplicationRequestDto.loanPurpose());
-            loanApplication.setLoanAmountRequested(loanApplicationRequestDto.loanAmount());
-            loanApplication.setStatus(LoanStatus.PENDING);
-            loanApplication.setTerm(loanApplicationRequestDto.loanTerm());
+            var loanApplication = getLoanApplication(loanApplicationRequestDto, updatedUser);
             val saveLoanApplication = loanApplicationRepository.save(loanApplication);
             fetchAndStoreCreditInfo(updatedUser);
             return prepareResponse(HttpStatus.CREATED, "Successfully create Loan Application",
@@ -105,12 +103,27 @@ public class LoanServiceImpl implements LoanService {
         }
     }
 
+    private LoanApplication getLoanApplication(LoanApplicationRequestDto loanApplicationRequestDto, User updatedUser) {
+        var loanApplication = new LoanApplication();
+        loanApplication.setUser(updatedUser);
+        loanApplication.setPurpose(loanApplicationRequestDto.loanPurpose());
+        loanApplication.setLoanAmountRequested(loanApplicationRequestDto.loanAmount());
+        loanApplication.setStatus(LoanStatus.PENDING);
+        loanApplication.setTerm(loanApplicationRequestDto.loanTerm());
+        loanApplication.setOutstandingBalance(calculateInitialOutstandingBalance(loanApplication.getLoanAmountRequested()));
+        return loanApplication;
+    }
+
+    private double calculateInitialOutstandingBalance(double loanAmountRequested) {
+        return loanAmountRequested + (loanAmountRequested * originationFeeRate);
+    }
+
     private CreditScore fetchAndStoreCreditInfo(User user) {
         try {
             val request = new MockRequestDto(user.getUserId(), user.getEmail());
-            CompletableFuture<Integer> creditScore = loanDataService.fetchCreditScore(request);
-            CompletableFuture<Double> dtiRatio = loanDataService.calculateDtiRatio(request);
-            CompletableFuture<AlternativeCreditData> alternativeCreditData = loanDataService.fetchAlternativeCreditData(request);
+            CompletableFuture<Integer> creditScore = mockLoanDataServiceImpl.fetchCreditScore(request);
+            CompletableFuture<Double> dtiRatio = mockLoanDataServiceImpl.calculateDtiRatio(request);
+            CompletableFuture<AlternativeCreditData> alternativeCreditData = mockLoanDataServiceImpl.fetchAlternativeCreditData(request);
             var creditScoreInfo = new CreditScore();
             creditScoreInfo.setUser(user);
             CompletableFuture.allOf(creditScore, dtiRatio, alternativeCreditData);

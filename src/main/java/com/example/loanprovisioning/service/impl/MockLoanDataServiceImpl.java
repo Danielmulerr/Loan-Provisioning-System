@@ -3,19 +3,21 @@ package com.example.loanprovisioning.service.impl;
 import com.example.loanprovisioning.config.feign.FeignServiceClient;
 import com.example.loanprovisioning.dto.AlternativeCreditData;
 import com.example.loanprovisioning.dto.MockRequestDto;
+import com.example.loanprovisioning.service.LoanDataService;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
 
 @Service
-public class LoanDataService {
+public class MockLoanDataServiceImpl implements LoanDataService {
     private final FeignServiceClient feignServiceClient;
 
-    public LoanDataService(FeignServiceClient feignServiceClient) {
+    public MockLoanDataServiceImpl(FeignServiceClient feignServiceClient) {
         this.feignServiceClient = feignServiceClient;
     }
 
+    @Override
     @Async
     public CompletableFuture<Integer> fetchCreditScore(MockRequestDto mockRequestDto) {
         //val creditScoreResponse = feignServiceClient.fetchCreditScore(mockRequestDto);
@@ -25,6 +27,7 @@ public class LoanDataService {
     }
 
 
+    @Override
     @Async
     public CompletableFuture<Double> calculateDtiRatio(MockRequestDto mockRequestDto) {
         //val salaryInfo = feignServiceClient.fetchSalaryInfo(mockRequestDto);
@@ -34,6 +37,7 @@ public class LoanDataService {
     }
 
 
+    @Override
     @Async
     public CompletableFuture<AlternativeCreditData> fetchAlternativeCreditData(MockRequestDto mockRequestDto) {
         //val alternativeCredit = feignServiceClient.fetchAlternativeCreditData(mockRequestDto);
