@@ -6,5 +6,6 @@ public enum LoanStatus {
     REJECTED,
     MANUAL_REVIEW,
     DISBURSED,
-    REPAID
+    REPAID,
+    RESTRUCTURED
 }

@@ -44,7 +44,7 @@ Our rule engine uses Drools to automate loan qualification and structuring:
 - Auto Structuring:
     - Adjust loan terms (downpayment, monthly payments, loan term, interest rate) to meet credit policies.
 
-#### Auto structuring
+### Auto structuring
 
 - Auto Structuring Increment Down Payment:
     - If the application is under manual review and the credit score is between 600 and 700, increase the down payment
@@ -71,18 +71,16 @@ Our rule engine uses Drools to automate loan qualification and structuring:
     - used declarative feign client for the integration
     - this includes audit trail for every api call and record the action
     - Helpful to monitor and take action based on user behavior etc.
-- Multithreading when calling multiple data points(external service)
+ - Multithreading when calling multiple data points(external service)
     - this will reduce latency as we can fetch data form different endpoint at the same time
+ - **Used configuration** for values that are used in program
+  -  
 - Notification service with email
     - Send email to users(not working as we need SMTP server for this)
         - in case of loan approval notification
         - disbursement notification
         - repayment confirmation
 - Clean and maintainable code, that is aligned with principles
-
-## Unit tests
-- To validate business rules and other logic
-
 ## Documentation
 - api documentation through swagger
 - http://localhost:8595/swagger-ui/index.html

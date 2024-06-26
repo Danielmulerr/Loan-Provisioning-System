@@ -58,7 +58,7 @@ rule "Auto Structuring Increment Down Payment"
         // Increment down payment and loan term
         $application.setLoanAmountRequested($application.getLoanAmountRequested() - 500);
         $application.setTerm($application.getTerm() + 12);
-        $application.setStatus(LoanStatus.APPROVED);
+        $application.setStatus(LoanStatus.RESTRUCTURED);
         update($application);
 end
 
@@ -71,7 +71,7 @@ rule "Auto Structuring Decrease Monthly Payment"
         // Decrease monthly payment and increase loan term
         $application.setLoanAmountRequested($application.getLoanAmountRequested() + 1000);
         $application.setTerm($application.getTerm() + 24);
-        $application.setStatus(LoanStatus.APPROVED);
+        $application.setStatus(LoanStatus.RESTRUCTURED);
         update($application);
 end
 
@@ -84,7 +84,7 @@ rule "Auto Structuring Reduce Interest Rate"
         // Reduce interest rate for better credit score
         $application.setLoanAmountRequested($application.getLoanAmountRequested() - 2000);
         $application.setTerm($application.getTerm() + 36);
-        $application.setStatus(LoanStatus.APPROVED);
+        $application.setStatus(LoanStatus.RESTRUCTURED);
         update($application);
 end
 
@@ -97,6 +97,6 @@ rule "Auto Structuring for High Credit Score and Low DTI"
         // Adjust loan terms or conditions for high credit score and low DTI
         $application.setLoanAmountRequested($application.getLoanAmountRequested() - 1000);
         $application.setTerm($application.getTerm() + 48);
-        $application.setStatus(LoanStatus.APPROVED);
+        $application.setStatus(LoanStatus.RESTRUCTURED);
         update($application);
 end

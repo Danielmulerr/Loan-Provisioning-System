@@ -58,6 +58,7 @@ springdoc:
   swagger-ui:
     disable-swagger-default-url: true
 
+#MOCK URL AND API KEY
 mock:
   service:
     url: "https://credit-bureau-dev.service"
@@ -66,10 +67,12 @@ mock:
     url: "https://sample-bank-api.dev.com"
     apiKey: "xzqs9ERIzROgbLNS031vjBpoKhXphthlFmuqadOtaImUi3veSiJ+K9o1+DvO50SMw+4OQvG9Eg7DYVOv7o2mUQ=="
 
+# LOAN SPECIFIC CONFIG
 main-account: 10000454003453450345
 interest-rate: 0.12 # 12% annual interest rate
 origination-fee-rate: 0.01
 
+#MAILER CONFIG FOR SMTP
 mailer-config:
   baseUrl: ""
   apiToken: ""
@@ -82,6 +85,7 @@ mailer-config:
   smtpStarttlsEnable: true
   sslEnable: false
 
+#EMAIL TEMPLATE WE CAN USE SENDING DIFFERENT MESSAGE
 email-config:
   from: ""
   verifyEmailSubject: "Confirm your identity for your account"
@@ -98,9 +102,12 @@ email-config:
   phoneChangeInitiate: "Dear {0}, Your change phone request OTP is {1}, please use this to finalise your process."
   appName: "Loan provisioning system"
 
+#MOCK API KEY FOR EXTERNAL SERVICE INTEGRATION
 apikey: dc79b0dfd0f5807e78cf8a445cd22a70
 secretkey: 01c89b290ac5fa9a8284d196b90df337
 
+
+# BELOW RULES NOT USED AS WE ARE USING DROOLS RULE ENGIN
 loan:
   validationRules:
     rule-1:

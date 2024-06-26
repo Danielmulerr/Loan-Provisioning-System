@@ -19,4 +19,13 @@ public class LoanApplicationDto {
     private String purpose;
     @JsonProperty("status")
     private LoanStatus status;
+    private Timestamp approvalDate;
+    @JsonProperty("disbursementDate")
+    private Timestamp disbursementDate;
+    @JsonProperty("lastUpdateDate")
+    private Timestamp lastUpdateDate;
+    @JsonProperty("outstandingBalance")
+    private double outstandingBalance;
+    @JsonProperty("totalInterestPaid")
+    private double totalInterestPaid;
 }
